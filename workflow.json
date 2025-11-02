@@ -1,0 +1,46 @@
+{
+  "id": "tech-news-workflow",
+  "name": "Tech News Agent Workflow",
+  "nodes": [
+    {
+      "id": "telex-trigger",
+      "type": "trigger",
+      "label": "Telex Message Trigger",
+      "config": {
+        "event": "message",
+        "platform": "telex"
+      },
+      "position": [120, 80]
+    },
+    {
+      "id": "tech-news-agent",
+      "type": "agent",
+      "label": "Tech News Agent",
+      "config": {
+        "agentId": "tech_news_agent"
+      },
+      "position": [480, 80]
+    },
+    {
+      "id": "send-response",
+      "type": "respond",
+      "label": "Send Response to Telex",
+      "config": {
+        "platform": "telex"
+      },
+      "position": [840, 80]
+    }
+  ],
+  "edges": [
+    {
+      "id": "trigger-to-agent",
+      "from": "telex-trigger",
+      "to": "tech-news-agent"
+    },
+    {
+      "id": "agent-to-respond",
+      "from": "tech-news-agent",
+      "to": "send-response"
+    }
+  ]
+}
