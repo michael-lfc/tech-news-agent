@@ -265,14 +265,107 @@
 
 // export default router;
 
+// import express from "express";
+// import { techNewsAgent } from "../mastra.js";
+
+// const router = express.Router();
+
+// router.post("/command", async (req, res) => {
+//   try {
+//     console.log("🔹 Incoming Request Body:", req.body);
+
+//     const { id, text, channel_id } = req.body;
+
+//     if (!id || !text) {
+//       return res.status(400).json({ error: "Invalid A2A message format" });
+//     }
+
+//     const lowerText = text.toLowerCase().trim();
+
+//     if (!lowerText.includes("tech news") && !lowerText.includes("news")) {
+//       return res.json({
+//         id: `reply_${Date.now()}`,
+//         in_reply_to: id,
+//         type: "message",
+//         text: "I only know how to fetch tech news. Try: *get tech news*",
+//       });
+//     }
+
+//     console.log("🧠 Fetching tools from techNewsAgent...");
+//     const tools = await techNewsAgent.getTools(); // <-- added 'await'
+
+//     if (!tools || !tools.getTechNews) {
+//       console.error("❌ getTechNews tool missing or undefined!");
+//       return res.status(500).json({ error: "Tech News tool not available" });
+//     }
+
+//     console.log("🚀 Executing getTechNews tool...");
+//     const result = await tools.getTechNews.execute({ limit: 5 });
+//     console.log("✅ Tool execution result:", result);
+
+//     if (!result.success) {
+//       return res.json({
+//         id: `reply_${Date.now()}`,
+//         in_reply_to: id,
+//         type: "message",
+//         text: result.error || "Sorry, I couldn't fetch news right now.",
+//       });
+//     }
+
+//     const blocks = result.headlines.map((h, i) => ({
+//       type: "section",
+//       text: {
+//         type: "mrkdwn",
+//         text: `*${i + 1}.* <${h.url}|${h.title}>\n_${h.source} • ${new Date(
+//           h.publishedAt
+//         ).toLocaleDateString()}_`,
+//       },
+//     }));
+
+//     return res.json({
+//       id: `reply_${Date.now()}`,
+//       in_reply_to: id,
+//       type: "message",
+//       text: `Here are the top ${result.count} tech headlines:`,
+//       blocks,
+//     });
+//   } catch (err) {
+//     console.error("❌ Full Error Trace:", err);
+//     return res.status(500).json({ error: err.message || "Internal error" });
+//   }
+// });
+
+// export default router;
+
+
 import express from "express";
 import { techNewsAgent } from "../mastra.js";
 
 const router = express.Router();
 
+// ADD THIS GET ROUTE FIRST
+router.get("/command", (req, res) => {
+  res.status(200).json({
+    status: "ok",
+    message: "Telex A2A endpoint is active and ready for POST messages.",
+    agent: "Tech News Agent",
+    trigger: "get tech news",
+    example_payload: {
+      id: "msg_123",
+      text: "get tech news",
+      channel_id: "chan_test_001",
+      user_id: "user_999",
+      type: "message",
+    },
+    postman_tip: "Use POST method to test!",
+    health_check: "OK",
+  });
+});
+
+// Your existing POST route (unchanged — perfect!)
 router.post("/command", async (req, res) => {
   try {
-    console.log("🔹 Incoming Request Body:", req.body);
+    console.log("Incoming Request Body:", req.body);
 
     const { id, text, channel_id } = req.body;
 
@@ -291,17 +384,17 @@ router.post("/command", async (req, res) => {
       });
     }
 
-    console.log("🧠 Fetching tools from techNewsAgent...");
-    const tools = await techNewsAgent.getTools(); // <-- added 'await'
+    console.log("Fetching tools from techNewsAgent...");
+    const tools = await techNewsAgent.getTools();
 
     if (!tools || !tools.getTechNews) {
-      console.error("❌ getTechNews tool missing or undefined!");
+      console.error("getTechNews tool missing or undefined!");
       return res.status(500).json({ error: "Tech News tool not available" });
     }
 
-    console.log("🚀 Executing getTechNews tool...");
+    console.log("Executing getTechNews tool...");
     const result = await tools.getTechNews.execute({ limit: 5 });
-    console.log("✅ Tool execution result:", result);
+    console.log("Tool execution result:", result);
 
     if (!result.success) {
       return res.json({
@@ -330,7 +423,7 @@ router.post("/command", async (req, res) => {
       blocks,
     });
   } catch (err) {
-    console.error("❌ Full Error Trace:", err);
+    console.error("Full Error Trace:", err);
     return res.status(500).json({ error: err.message || "Internal error" });
   }
 });
