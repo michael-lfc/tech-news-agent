@@ -79,6 +79,7 @@ import { mastra } from "./mastra.js"; // ✅ Initialize Mastra before routes
 
 import newsRouter from "./routes/newsRouter.js";
 import telexRouter from "./routes/telexRouter.js";
+// import { telexRouter } from "./routes/telexRouter.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
