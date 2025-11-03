@@ -1,12 +1,14 @@
 {
-  "id": "tech-news-workflow",
+  "id": "tech-news-workflow", 
   "name": "Tech News Agent Workflow",
+  "category": "technology",
   "short_description": "Fetches and delivers latest technology news headlines",
+  "long_description": "This workflow handles incoming Telex messages, processes requests for technology news, fetches latest headlines from NewsAPI, and returns formatted responses with article titles, sources, and links to users in Telex chat.",
   "description": "Handles incoming Telex messages and responds with tech news from external API",
   "nodes": [
     {
       "id": "telex-trigger",
-      "type": "trigger",
+      "type": "trigger", 
       "label": "Telex Message Trigger",
       "config": {
         "event": "message",
@@ -15,31 +17,13 @@
       "position": [100, 100]
     },
     {
-      "id": "message-processor",
-      "type": "processor",
-      "label": "Process Incoming Message",
-      "config": {
-        "handler": "parseTelexMessage"
-      },
-      "position": [350, 100]
-    },
-    {
       "id": "tech-news-agent",
       "type": "agent",
-      "label": "Tech News Agent",
+      "label": "Tech News Agent", 
       "config": {
         "agentId": "tech_news_agent"
       },
       "position": [600, 100]
-    },
-    {
-      "id": "response-formatter",
-      "type": "processor", 
-      "label": "Format Telex Response",
-      "config": {
-        "handler": "formatTelexResponse"
-      },
-      "position": [850, 100]
     },
     {
       "id": "send-response",
@@ -53,23 +37,13 @@
   ],
   "edges": [
     {
-      "id": "trigger-to-processor",
+      "id": "trigger-to-agent", 
       "from": "telex-trigger",
-      "to": "message-processor"
-    },
-    {
-      "id": "processor-to-agent",
-      "from": "message-processor", 
       "to": "tech-news-agent"
     },
     {
-      "id": "agent-to-formatter",
+      "id": "agent-to-respond",
       "from": "tech-news-agent",
-      "to": "response-formatter"
-    },
-    {
-      "id": "formatter-to-respond",
-      "from": "response-formatter",
       "to": "send-response"
     }
   ]
