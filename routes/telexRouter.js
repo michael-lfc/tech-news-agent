@@ -429,3 +429,55 @@ router.post("/command", async (req, res) => {
 });
 
 export default router;
+
+// import express from "express";
+// import { techNewsAgent } from "../mastra.js";
+
+// const router = express.Router();
+// router.post("/command", async (req, res) => {
+//   try {
+//     console.log("🔹 Incoming Request Body:", req.body);
+
+//     let body = req.body;
+//     // UNWRAP JSON-RPC (Telex format)
+//     if (body.jsonrpc === "2.0" && body.method) {
+//       body = body.params || {};
+//       console.log("🔄 Unwrapped JSON-RPC params:", body);
+//     }
+
+//     const { id, text, channel_id } = body;
+
+//     if (!id || !text) {
+//       return res.status(400).json({ 
+//         jsonrpc: "2.0",  // ADD: Reply in JSON-RPC for Telex
+//         id: body.id || req.body.id,
+//         error: { code: -32600, message: "Invalid A2A message format" }
+//       });
+//     }
+
+//     // ... rest of your code unchanged (lowerText check, tools, etc.)
+
+//     // WRAP REPLY IN JSON-RPC
+//     const reply = {
+//       id: `reply_${Date.now()}`,
+//       in_reply_to: id,
+//       type: "message",
+//       text: `Here are the top ${result.count} tech headlines:`,
+//       blocks,
+//     };
+
+//     return res.json({
+//       jsonrpc: "2.0",
+//       id: body.id || req.body.id,
+//       result: reply  // Telex expects this
+//     });
+
+//   } catch (err) {
+//     console.error("❌ Full Error Trace:", err);
+//     return res.status(500).json({ 
+//       jsonrpc: "2.0",
+//       id: req.body.id,
+//       error: { code: -32603, message: err.message || "Internal error" }
+//     });
+//   }
+// });
