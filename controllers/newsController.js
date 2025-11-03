@@ -3,49 +3,56 @@ import { techNewsAgent } from "../mastra.js";
 export const getTechNews = async (req, res) => {
   try {
     let body = req.body;
+    console.log("📩 Incoming from Telex:", JSON.stringify(body, null, 2));
 
-    // Detect JSON-RPC
+    // Detect JSON-RPC structure
     const isJSONRPC = body.jsonrpc === "2.0" && body.method;
     if (isJSONRPC) {
       body = body.params || {};
     }
 
-    const { id } = body;
-
-    // Fetch tool from techNewsAgent
     const tools = await techNewsAgent.getTools();
-    if (!tools || !tools.getTechNews) {
-      const errorResponse = { code: -32601, message: "Tech News tool not available" };
-      return isJSONRPC
-        ? res.json({ jsonrpc: "2.0", id: body.id || req.body.id, error: errorResponse })
-        : res.status(500).json({ success: false, error: "Tech News tool not available" });
+
+    if (!tools?.getTechNews) {
+      const msg = "⚠️ Tech News tool not available.";
+      console.error(msg);
+      return res.status(500).json({
+        event: { text: msg },
+      });
     }
 
     const result = await tools.getTechNews.execute({ limit: 5 });
 
     if (!result.success) {
-      const reply = { success: false, error: result.error || "Failed to fetch tech news" };
-      return isJSONRPC
-        ? res.json({ jsonrpc: "2.0", id: body.id || req.body.id, result: reply })
-        : res.status(500).json(reply);
+      const msg = `❌ Failed to fetch tech news: ${result.error || "Unknown error"}`;
+      console.error(msg);
+      return res.status(500).json({
+        event: { text: msg },
+      });
     }
 
-    const reply = {
-      success: true,
-      total: result.count,
-      headlines: result.headlines,
-    };
+    const headlines = result.headlines
+      .map((h, i) => `${i + 1}. ${h}`)
+      .join("\n\n");
 
-    return isJSONRPC
-      ? res.json({ jsonrpc: "2.0", id: body.id || req.body.id, result: reply })
-      : res.json(reply);
+    const message = `📰 Top Tech Headlines:\n\n${headlines}\n\nSource: Tech News Agent`;
+
+    // ✅ Telex-compatible format
+    const reply = { event: { text: message } };
+
+    if (isJSONRPC) {
+      return res.json({
+        jsonrpc: "2.0",
+        id: body.id || req.body.id,
+        result: reply,
+      });
+    }
+
+    res.json(reply);
   } catch (err) {
     console.error("❌ getTechNews Error:", err);
-    const errorResponse = { code: -32603, message: err.message || "Internal error" };
-    return res.status(500).json(
-      req.body.jsonrpc === "2.0"
-        ? { jsonrpc: "2.0", id: req.body.id, error: errorResponse }
-        : { success: false, error: err.message || "Internal error" }
-    );
+    res.status(500).json({
+      event: { text: `Internal error: ${err.message}` },
+    });
   }
 };
