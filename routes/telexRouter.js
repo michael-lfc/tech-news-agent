@@ -5,8 +5,6 @@ const router = express.Router();
 
 /**
  * 🧠 Health check for Telex integration
- * - Verifies the agent route is live and reachable
- * - Can be tested directly in Postman or browser
  */
 router.get("/command", (req, res) => {
   res.status(200).json({
@@ -29,10 +27,17 @@ router.get("/command", (req, res) => {
 
 /**
  * ⚡ POST: Main route for Telex A2A calls
- * This endpoint handles both:
- * - Regular JSON POSTs (from Postman)
- * - JSON-RPC structured payloads (from Telex)
  */
 router.post("/command", getTechNews);
+
+/**
+ * 🟢 Debug route (temporary)
+ * Logs incoming Telex requests for troubleshooting
+ */
+router.post("/debug", (req, res) => {
+  console.log("🟢 Telex Debug Body:", JSON.stringify(req.body, null, 2));
+  console.log("🟢 Telex Debug Headers:", req.headers);
+  res.json({ status: "ok", message: "Body logged to console" });
+});
 
 export default router;
