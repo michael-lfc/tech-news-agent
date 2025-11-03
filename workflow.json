@@ -1,6 +1,7 @@
 {
   "id": "tech-news-workflow",
   "name": "Tech News Agent Workflow",
+  "description": "Handles incoming Telex messages and responds with tech news",
   "nodes": [
     {
       "id": "telex-trigger",
@@ -10,7 +11,16 @@
         "event": "message",
         "platform": "telex"
       },
-      "position": [120, 80]
+      "position": [100, 100]
+    },
+    {
+      "id": "message-processor",
+      "type": "processor",
+      "label": "Process Incoming Message",
+      "config": {
+        "handler": "parseTelexMessage"
+      },
+      "position": [350, 100]
     },
     {
       "id": "tech-news-agent",
@@ -19,7 +29,16 @@
       "config": {
         "agentId": "tech_news_agent"
       },
-      "position": [480, 80]
+      "position": [600, 100]
+    },
+    {
+      "id": "response-formatter",
+      "type": "processor", 
+      "label": "Format Telex Response",
+      "config": {
+        "handler": "formatTelexResponse"
+      },
+      "position": [850, 100]
     },
     {
       "id": "send-response",
@@ -28,18 +47,28 @@
       "config": {
         "platform": "telex"
       },
-      "position": [840, 80]
+      "position": [1100, 100]
     }
   ],
   "edges": [
     {
-      "id": "trigger-to-agent",
+      "id": "trigger-to-processor",
       "from": "telex-trigger",
+      "to": "message-processor"
+    },
+    {
+      "id": "processor-to-agent",
+      "from": "message-processor", 
       "to": "tech-news-agent"
     },
     {
-      "id": "agent-to-respond",
+      "id": "agent-to-formatter",
       "from": "tech-news-agent",
+      "to": "response-formatter"
+    },
+    {
+      "id": "formatter-to-respond",
+      "from": "response-formatter",
       "to": "send-response"
     }
   ]
