@@ -1,5 +1,5 @@
 // controllers/newsController.js - Optional utility controller
-import { techNewsAgent } from "../mastra.js";
+import { techPulseAgent } from "../mastra.js";
 
 /**
  * Utility function for direct news fetching (not for Telex integration)
