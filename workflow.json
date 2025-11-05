@@ -1,50 +1,53 @@
 {
-  "id": "tech-news-workflow",
-  "name": "Tech News Agent Workflow",
-  "category": "technology",
-  "short_description": "Fetches and delivers latest technology news headlines",
-  "long_description": "This workflow handles incoming Telex messages, processes requests for technology news, fetches latest headlines from NewsAPI, and returns formatted responses with article titles, sources, and links to users in Telex chat.",
-  "description": "Handles incoming Telex messages and responds with tech news from external API",
-  "nodes": [
-    {
-      "id": "telex-trigger",
-      "type": "trigger",
-      "label": "Telex Message Trigger",
-      "config": {
-        "event": "message",
-        "platform": "telex"
-      },
-      "position": [100, 100]
-    },
-    {
-      "id": "tech-news-agent",
-      "type": "agent",
-      "label": "TechPulse Agent",
-      "config": {
-        "agentId": "techPulse"
-      },
-      "position": [600, 100]
-    },
-    {
-      "id": "send-response",
-      "type": "respond",
-      "label": "Send Response to Telex",
-      "config": {
-        "platform": "telex"
-      },
-      "position": [1100, 100]
-    }
-  ],
-  "edges": [
-    {
-      "id": "trigger-to-agent",
-      "from": "telex-trigger",
-      "to": "tech-news-agent"
-    },
-    {
-      "id": "agent-to-respond",
-      "from": "tech-news-agent",
-      "to": "send-response"
-    }
-  ]
+"id": "tech-news-workflow",
+"name": "Tech News Agent Workflow",
+"category": "technology",
+"short_description": "Fetches and delivers latest technology news headlines",
+"long_description": "Handles incoming Telex messages and responds with tech news from NewsAPI using the Tech News Agent.",
+"description": "Responds to messages containing 'tech' or 'news' with latest tech headlines.",
+"nodes": [
+{
+"id": "telex-trigger",
+"type": "trigger",
+"label": "Telex Message Trigger",
+"config": {
+"event": "message",
+"platform": "telex",
+"conditions": {
+"text_contains": ["tech", "news"]
+}
+},
+"position": [100, 100]
+},
+{
+"id": "tech-news-agent",
+"type": "agent",
+"label": "Tech News Agent",
+"config": {
+"agentId": "Tech News Agent"
+},
+"position": [600, 100]
+},
+{
+"id": "send-response",
+"type": "respond",
+"label": "Send Response to Telex",
+"config": {
+"platform": "telex"
+},
+"position": [1100, 100]
+}
+],
+"edges": [
+{
+"id": "trigger-to-agent",
+"from": "telex-trigger",
+"to": "tech-news-agent"
+},
+{
+"id": "agent-to-respond",
+"from": "tech-news-agent",
+"to": "send-response"
+}
+]
 }
