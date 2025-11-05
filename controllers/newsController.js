@@ -25,53 +25,38 @@
 //   }
 // };
 
-import { techPulseAgent } from "../mastra.js";
 
-/**
-
-* Fetch latest tech news
-* Handles both direct API calls (query param) and Telex calls (JSON-RPC)
-  */
-  export const getTechNews = async (req, res) => {
+app.post('/tech-news', async (req, res) => {  // or app.all() if supporting both
   try {
-  // Determine limit for news (query param fallback to 5)
-  const limit = parseInt(req.query.limit) || 5;
+    const articles = await fetchTechNews(); // ← You MUST define this!
 
-  // If request is from Telex, ensure jsonrpc exists
-  const jsonrpc = req.body?.jsonrpc || null;
+    const id = req.method === "POST" ? (req.body?.id ?? null) : (req.query.id ?? null);
 
-  if (req.body && !jsonrpc) {
-  return res.status(400).json({
-  error: "Bad Request: 'jsonrpc' field missing in request body"
-  });
-  }
+    const resultPayload = {
+      jsonrpc: "2.0",
+      result: { event: { text: "📰 Latest tech news", articles } },
+      id
+    };
 
-  // Check if the tool exists
-  const tools = await techPulseAgent.getTools();
-  if (!tools?.getTechNews) {
-  return res.status(503).json({ error: "News service unavailable" });
-  }
+    console.log("✅ Tech news fetched successfully");
 
-  const result = await tools.getTechNews.execute({ limit });
-  if (!result.success) {
-  return res.status(500).json({ error: result.error });
-  }
+    // Plain JSON for GET
+    if (req.method === "GET") {
+      return res.status(200).json({ articles });
+    }
 
-  // Respond differently if Telex JSON-RPC call
-  if (jsonrpc) {
-  return res.json({
-  jsonrpc,
-  result: {
-  event: { text: result.dataText || "📰 Latest tech news unavailable" }
-  },
-  id: req.body.id || "telex_001"
-  });
-  }
+    // JSON-RPC for POST
+    return res.status(200).json(resultPayload);
 
-  // Standard API response for direct queries
-  res.json(result);
   } catch (error) {
-  console.error("❌ getTechNews Error:", error);
-  res.status(500).json({ error: error.message });
+    console.error("💥 Error fetching tech news:", error.message);
+    const id = req.method === "POST" ? (req.body?.id ?? null) : (req.query.id ?? null);
+
+    return res.status(500).json({
+      jsonrpc: "2.0",
+      error: { code: -32603, message: "Internal server error: failed to fetch news" },
+      id
+    });
   }
-  };
+});
+
