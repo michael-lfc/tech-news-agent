@@ -1,20 +1,22 @@
-// controllers/newsController.js - Optional utility controller
+// controllers/newsController.js
 import { techPulseAgent } from "../mastra.js";
 
 /**
- * Utility function for direct news fetching (not for Telex integration)
+ * GET /news?limit=5
+ * Optional utility endpoint for fetching tech news directly
  */
 export const getTechNews = async (req, res) => {
   try {
     const limit = parseInt(req.query.limit) || 5;
-    const tools = await techNewsAgent.getTools();
-    
+
+    const tools = await techPulseAgent.getTools();
+
     if (!tools?.getTechNews) {
       return res.status(503).json({ error: "News service unavailable" });
     }
 
     const result = await tools.getTechNews.execute({ limit });
-    
+
     if (!result.success) {
       return res.status(500).json({ error: result.error });
     }
