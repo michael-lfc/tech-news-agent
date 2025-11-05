@@ -1,19 +1,19 @@
+// telexRouter.js
 import express from "express";
 import { techPulseAgent } from "../mastra.js";
 
 const router = express.Router();
 
-// Main Telex endpoint
 router.post("/command", async (req, res) => {
   try {
     console.log("📩 Incoming Telex request:", JSON.stringify(req.body, null, 2));
 
     const { method, params = {}, id } = req.body;
 
+    // Only handle tech news requests
     if (method === "getTechNews" || params.text?.toLowerCase().includes("news")) {
-      console.log("📰 Processing news request...");
-
       const tools = await techPulseAgent.getTools();
+
       if (!tools?.getTechNews) {
         return res.json({
           jsonrpc: "2.0",
@@ -33,24 +33,33 @@ router.post("/command", async (req, res) => {
         });
       }
 
+      // Format headlines into a text string Telex can display
       const headlines = newsResult.headlines
-        .map((article, i) => `${i + 1}. **${article.title}**\n   📰 ${article.source} | 🔗 ${article.url}`)
+        .map(
+          (article, index) =>
+            `${index + 1}. **${article.title}**\n   📰 ${article.source} | 🔗 ${article.url}`
+        )
         .join("\n\n");
+
+      const responseText = `📰 **Latest Tech News**\n\n${headlines}`;
 
       return res.json({
         jsonrpc: "2.0",
-        result: { event: { text: `📰 **Latest Tech News**\n\n${headlines}` } },
+        result: { event: { text: responseText } },
         id
       });
     }
 
-    // Default response
+    // Default response for other messages
     res.json({
       jsonrpc: "2.0",
-      result: { event: { text: "🤖 I'm TechPulse! Ask me for 'tech news'." } },
+      result: {
+        event: {
+          text: "🤖 I'm TechPulse! Ask me for 'tech news' to get the latest headlines."
+        }
+      },
       id
     });
-
   } catch (error) {
     console.error("❌ Telex command error:", error);
     res.json({
@@ -59,16 +68,6 @@ router.post("/command", async (req, res) => {
       id: req.body?.id || null
     });
   }
-});
-
-// Health check
-router.get("/command", (req, res) => {
-  res.status(200).json({
-    status: "ok",
-    message: "✅ TechPulse Agent is active",
-    endpoints: ["POST /telex/command"],
-    timestamp: new Date().toISOString()
-  });
 });
 
 export default router;
