@@ -2,21 +2,18 @@
 import { techPulseAgent } from "../mastra.js";
 
 /**
- * GET /news?limit=5
- * Optional utility endpoint for fetching tech news directly
+ * Fetch latest tech news (for direct API testing, optional)
  */
 export const getTechNews = async (req, res) => {
   try {
     const limit = parseInt(req.query.limit) || 5;
 
     const tools = await techPulseAgent.getTools();
-
     if (!tools?.getTechNews) {
       return res.status(503).json({ error: "News service unavailable" });
     }
 
     const result = await tools.getTechNews.execute({ limit });
-
     if (!result.success) {
       return res.status(500).json({ error: result.error });
     }
