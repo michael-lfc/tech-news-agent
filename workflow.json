@@ -24,7 +24,7 @@
       "type": "agent",
       "label": "Tech News Agent",
       "config": {
-        "agentId": "technews_001"
+        "agentId": "techPulse"
       },
       "position": [600, 100]
     },
