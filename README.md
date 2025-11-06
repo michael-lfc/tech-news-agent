@@ -14,7 +14,7 @@ Live Demo
 Try it in Telex.im:
 @TechNews get tech news
 Public Endpoint:
-POST https://tech-news-agent.onrender.com/telex/command
+POST https://powerful-atoll-01260-84ad49c653d5.herokuapp.com
 Logs:
 https://api.telex.im/agent-logs/chan_test_001.txt
 
