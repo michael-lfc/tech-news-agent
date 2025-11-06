@@ -15,8 +15,6 @@ Try it in Telex.im:
 @TechPulse get tech news
 Public Endpoint:
 POST https://powerful-atoll-01260-84ad49c653d5.herokuapp.com
-Logs:
-https://api.telex.im/agent-logs/chan_test_001.txt
 
 Project Structure
 tech-news-agent/
