@@ -1,6 +1,7 @@
 {
   "id": "tech-news-workflow",
   "name": "Tech News Agent Workflow",
+  "description": "Fetches and delivers latest technology news headlines from NewsAPI when users ask about tech news.",
   "category": "technology",
   "short_description": "Fetches and delivers latest technology news headlines",
   "long_description": "Handles incoming Telex messages and responds with tech news from NewsAPI using the Tech News Agent.",
