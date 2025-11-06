@@ -48,7 +48,7 @@ Test with Postman
 1. Create a New Request
 
 Method: POST
-URL: http://localhost:3000/telex/command
+URL: https://powerful-atoll-01260-84ad49c653d5.herokuapp.com
 
 2. Headers
 KeyValueContent-Typeapplication/json
