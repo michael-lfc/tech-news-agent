@@ -1,4 +1,4 @@
-Tech News Agent – Live AI Headlines in Telex.im
+techPulse – Live AI Headlines in Telex.im
 An intelligent AI co-worker powered by Mastra that delivers the latest technology headlines directly into your Telex.im channels — on demand.
 
 Features
@@ -12,11 +12,9 @@ Zero-config deployment – just add your API key and go
 
 Live Demo
 Try it in Telex.im:
-@TechNews get tech news
+@TechPulse get tech news
 Public Endpoint:
-POST https://tech-news-agent.onrender.com/telex/command
-Logs:
-https://api.telex.im/agent-logs/chan_test_001.txt
+POST https://powerful-atoll-01260-84ad49c653d5.herokuapp.com
 
 Project Structure
 tech-news-agent/
@@ -32,7 +30,7 @@ tech-news-agent/
 
 Setup & Run Locally
 bash# 1. Clone the repo
-git clone https://github.com/yourusername/tech-news-agent.git
+git clone https://github.com/michael-lfc/tech-news-agent.git
 cd tech-news-agent
 
 # 2. Install dependencies
@@ -50,7 +48,7 @@ Test with Postman
 1. Create a New Request
 
 Method: POST
-URL: http://localhost:3000/telex/command
+URL: https://powerful-atoll-01260-84ad49c653d5.herokuapp.com
 
 2. Headers
 KeyValueContent-Typeapplication/json
