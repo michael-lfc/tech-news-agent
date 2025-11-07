@@ -14,7 +14,6 @@
         "event": "message",
         "platform": "telex",
         "conditions": [
-          { "field": "text", "operator": "contains", "value": "tech" },
           { "field": "text", "operator": "contains", "value": "news" }
         ]
       },
@@ -25,18 +24,9 @@
       "type": "agent",
       "label": "Tech News Agent",
       "config": {
-        "agentId": "techPulse"
+        "agentId": "techpulse"
       },
       "position": [600, 100]
-    },
-    {
-      "id": "send-response",
-      "type": "respond",
-      "label": "Send Response to Telex",
-      "config": {
-        "platform": "telex"
-      },
-      "position": [1100, 100]
     }
   ],
   "edges": [
@@ -44,11 +34,6 @@
       "id": "trigger-to-agent",
       "from": "telex-trigger",
       "to": "tech-news-agent"
-    },
-    {
-      "id": "agent-to-respond",
-      "from": "tech-news-agent",
-      "to": "send-response"
     }
   ]
 }

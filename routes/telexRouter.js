@@ -178,7 +178,7 @@ router.post("/a2a/:channelId/message", async (req, res) => {
   }
 });
 
-// Test endpoint to verify webhook configuration - FIXED: removed ? from parameter
+// Test endpoint to verify webhook configuration -
 router.get("/test/:channelId", async (req, res) => {
   const { channelId } = req.params;
   const baseUrl = process.env.BASE_URL || `http://localhost:${process.env.PORT || 3000}`;
