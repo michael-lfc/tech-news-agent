@@ -1,39 +1,55 @@
 {
   "id": "tech-news-workflow",
-  "name": "Tech News Workflow",
-  "description": "Fetches technology news from NewsAPI",
+  "name": "Tech News Agent Workflow",
+  "description": "A comprehensive workflow that automatically fetches and delivers the latest technology news headlines to users on the Telex platform. This intelligent agent monitors conversations for news-related requests and responds with real-time technology updates from trusted sources.",
+  "category": "technology",
+  "short_description": "AI-powered tech news assistant that fetches and delivers latest technology headlines and updates from NewsAPI.",
+  "long_description": "This workflow enables the TechPulse AI agent to serve as a dedicated technology news assistant within Telex conversations. When users express interest in technology news, updates, or current events in the tech industry, the agent automatically detects these requests and responds with carefully curated news headlines from NewsAPI. The system filters for high-quality technology content, ensures timely delivery of breaking tech news, and provides direct links to full articles for deeper reading. Perfect for developers, tech enthusiasts, and professionals who want to stay informed about the latest in artificial intelligence, cybersecurity, electric vehicles, cloud computing, and emerging technologies.",
   "nodes": [
     {
-      "id": "trigger",
-      "name": "Message Trigger",
+      "id": "message-trigger",
+      "name": "Message Detection Trigger",
       "type": "trigger",
+      "label": "Tech News Request Detector",
       "config": {
         "event": "message",
         "platform": "telex",
         "conditions": [
           {
             "field": "text",
-            "value": "news", 
-            "operator": "contains"
+            "value": "news",
+            "operator": "contains",
+            "description": "Triggers when users mention news, technology updates, or current events"
           }
         ]
       },
       "position": [100, 100]
     },
     {
-      "id": "agent",
-      "name": "Tech News Agent",
+      "id": "tech-news-processor",
+      "name": "Tech News Processing Agent",
       "type": "agent",
+      "label": "TechPulse News Agent",
       "config": {
-        "agentId": "019a5969-2cde-74b0-b10b-6bf7656e9469"
+        "agentId": "019a5969-2cde-74b0-b10b-6bf7656e9469",
+        "description": "Core AI agent that processes news requests and fetches real-time technology headlines"
       },
-      "position": [300, 100]
+      "position": [400, 100]
     }
   ],
   "edges": [
     {
-      "from": "trigger",
-      "to": "agent"
+      "id": "trigger-to-processor",
+      "from": "message-trigger",
+      "to": "tech-news-processor",
+      "description": "Routes detected news requests to the news processing agent"
     }
-  ]
+  ],
+  "metadata": {
+    "version": "1.0",
+    "created": "2025-11-07",
+    "author": "Michael Agwogie",
+    "tags": ["news", "technology", "ai", "updates", "headlines"],
+    "integrations": ["NewsAPI", "Telex.im", "Mastra AI"]
+  }
 }
