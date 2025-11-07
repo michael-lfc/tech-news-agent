@@ -1,23 +1,20 @@
 {
   "id": "tech-news-workflow",
-  "name": "Tech News Fetcher",
-  "description": "Fetches technology news from NewsAPI when users ask about news",
-  "category": "technology",
-  "short_description": "Fetches latest tech news headlines",
-  "long_description": "Handles incoming Telex messages and responds with technology news from NewsAPI",
+  "name": "Tech News Workflow",
+  "description": "Fetches technology news from NewsAPI",
   "nodes": [
     {
       "id": "trigger",
+      "name": "Message Trigger",
       "type": "trigger",
-      "label": "Message Trigger",
       "config": {
         "event": "message",
         "platform": "telex",
         "conditions": [
           {
             "field": "text",
-            "operator": "contains", 
-            "value": "news"
+            "value": "news", 
+            "operator": "contains"
           }
         ]
       },
@@ -25,17 +22,16 @@
     },
     {
       "id": "agent",
+      "name": "Tech News Agent",
       "type": "agent",
-      "label": "Tech News Agent",
       "config": {
-        "agentId": "techpulse"
+        "agentId": "019a5969-2cde-74b0-b10b-6bf7656e9469"
       },
       "position": [300, 100]
     }
   ],
   "edges": [
     {
-      "id": "trigger-to-agent",
       "from": "trigger",
       "to": "agent"
     }
