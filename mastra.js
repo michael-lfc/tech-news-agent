@@ -1,3 +1,4 @@
+// mastra.js
 import { Mastra, Agent } from "@mastra/core";
 import axios from "axios";
 import dotenv from "dotenv";
@@ -37,14 +38,13 @@ Format the response in a clear, engaging way with emojis and proper formatting.`
 
           if (response.data.status !== "ok") throw new Error("NewsAPI error");
 
-          // ✅ Convert headlines to a single string
           const headlines = response.data.articles
             .filter(a => a.title)
             .slice(0, limit)
-            .map((a, i) => `📰 ${a.title}\n🔗 ${a.url}`)
+            .map((a) => `📰 ${a.title}\n🔗 ${a.url}`)
             .join("\n\n");
 
-          return { success: true, message: headlines }; // <-- Important
+          return { success: true, message: headlines };
         } catch (err) {
           console.error("❌ NewsAPI Error:", err.message);
           return { success: false, message: "📰 Tech news unavailable, try again later!" };
@@ -53,10 +53,10 @@ Format the response in a clear, engaging way with emojis and proper formatting.`
     },
   },
 
-  // ✅ Enable A2A
+  // ✅ Enable A2A safely
   a2a: {
     enabled: true,
-    url: "https://powerful-atoll-01260-84ad49c653d5.herokuapp.com/telex/a2a/techpulse/message"
+    url: process.env.A2A_URL || "http://localhost:3000/telex/a2a/techpulse/message"
   }
 });
 
@@ -65,4 +65,10 @@ export const mastra = new Mastra({
   agents: [techPulseAgent],
 });
 
+// ✅ Safe logging for A2A URL
 console.log("✅ Mastra initialized with TechPulse Agent and A2A enabled");
+if (techPulseAgent.a2a && techPulseAgent.a2a.url) {
+  console.log("🌐 A2A URL:", techPulseAgent.a2a.url);
+} else {
+  console.warn("⚠️ techPulseAgent.a2a is not defined. Check agent initialization.");
+}
