@@ -1,33 +1,35 @@
 {
+  "description": "Fetches technology news from NewsAPI",
+  "edges": [
+    {
+      "from": "trigger",
+      "to": "agent"
+    }
+  ],
   "id": "tech-news-workflow",
   "name": "Tech News Workflow",
-  "description": "Fetches technology news from NewsAPI",
   "nodes": [
     {
-      "id": "trigger",
-      "name": "Message Trigger",
-      "type": "trigger",
       "config": {
         "event": "message",
         "platform": "telex",
         "webhookUrl": "https://powerful-atoll-01260-84ad49c653d5.herokuapp.com/telex/a2a/techpulse/message"
       },
-      "position": [100, 100]
+      "id": "trigger",
+      "name": "Message Trigger",
+      "position": [100, 100],
+      "type": "trigger",
+      "typeVersion": 1
     },
     {
-      "id": "agent",
-      "name": "Tech News Agent",
-      "type": "agent",
       "config": {
         "agentId": "techPulse"
       },
-      "position": [300, 100]
-    }
-  ],
-  "edges": [
-    {
-      "from": "trigger",
-      "to": "agent"
+      "id": "agent",
+      "name": "Tech News Agent",
+      "position": [300, 100],
+      "type": "agent",
+      "typeVersion": 1
     }
   ]
 }
