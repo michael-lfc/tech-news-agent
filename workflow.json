@@ -16,7 +16,11 @@
         "event": "message",
         "platform": "telex",
         "conditions": [
-          { "field": "text", "operator": "contains", "value": "news" }
+          {
+            "field": "text",
+            "operator": "matches",
+            "value": "(?i)(news|tech news)"
+          }
         ]
       }
     },
