@@ -23,7 +23,8 @@
     },
     {
       "config": {
-        "agentId": "techPulse"
+        "agentId": "techPulse",
+        "webhookUrl": "https://powerful-atoll-01260-84ad49c653d5.herokuapp.com/telex/a2a/techpulse/message"
       },
       "id": "agent",
       "name": "Tech News Agent",
