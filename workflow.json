@@ -1,50 +1,33 @@
 {
-  "category": "technology",
   "id": "tech-news-workflow",
   "name": "Tech News Agent Workflow",
-  "short_description": "Fetches and delivers the latest technology news headlines.",
-  "long_description": "This workflow listens for messages containing the word 'news' on Telex, then triggers the TechPulse Agent to fetch and return the latest technology news from an external API.",
-
-  "a2a": {
-    "url": "https://powerful-atoll-01260-84ad49c653d5.herokuapp.com/telex/a2a/techpulse/message"
-  },
-  "endpoints": {
-    "message": "https://powerful-atoll-01260-84ad49c653d5.herokuapp.com/telex/a2a/techpulse/message"
-  },
-
+  "description": "Fetches technology news from NewsAPI",
   "nodes": [
     {
       "id": "trigger",
       "name": "Message Trigger",
-      "label": "Message Trigger",
       "type": "trigger",
-      "typeVersion": 1,
-      "position": [100, 100],
       "config": {
         "event": "message",
         "platform": "telex",
-        "conditions": [
-          {
-            "field": "text",
-            "operator": "contains",
-            "value": "news"
-          }
-        ]
+        "webhookUrl": "https://powerful-atoll-01260-84ad49c653d5.herokuapp.com/telex/a2a/techpulse/message"
       },
-      "children": [
-        {
-          "id": "agent",
-          "name": "Tech News Agent",
-          "label": "Tech News Agent",
-          "type": "agent",
-          "typeVersion": 1,
-          "position": [300, 100],
-          "config": {
-            "agentId": "techPulse",
-            "url": "https://powerful-atoll-01260-84ad49c653d5.herokuapp.com/telex/a2a/techpulse/message"
-          }
-        }
-      ]
+      "position": [100, 100]
+    },
+    {
+      "id": "agent",
+      "name": "Tech News Agent",
+      "type": "agent",
+      "config": {
+        "agentId": "techPulse"
+      },
+      "position": [300, 100]
+    }
+  ],
+  "edges": [
+    {
+      "from": "trigger",
+      "to": "agent"
     }
   ]
 }
