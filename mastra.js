@@ -5,7 +5,6 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-// ✅ TechPulse Agent with A2A
 export const techPulseAgent = new Agent({
   id: "techPulse",
   name: "Tech Pulse Agent",
@@ -18,7 +17,6 @@ Format the response in a clear, engaging way with emojis and proper formatting.`
     name: "gpt-4",
   },
 
-  // Tools
   tools: {
     getTechNews: {
       description: "Fetch latest technology news from NewsAPI",
@@ -52,23 +50,18 @@ Format the response in a clear, engaging way with emojis and proper formatting.`
       },
     },
   },
-
-  // ✅ Enable A2A safely
-  a2a: {
-    enabled: true,
-    url: process.env.A2A_URL || "http://localhost:3000/telex/a2a/techpulse/message"
-  }
 });
 
-// Initialize Mastra with agent
+// ✅ Initialize Mastra and manually attach A2A after agent creation
 export const mastra = new Mastra({
   agents: [techPulseAgent],
 });
 
-// ✅ Safe logging for A2A URL
+// ✅ Safely attach A2A URL after Mastra is ready
+techPulseAgent.a2a = {
+  enabled: true,
+  url: process.env.A2A_URL || "http://localhost:3000/telex/a2a/techpulse/message",
+};
+
 console.log("✅ Mastra initialized with TechPulse Agent and A2A enabled");
-if (techPulseAgent.a2a && techPulseAgent.a2a.url) {
-  console.log("🌐 A2A URL:", techPulseAgent.a2a.url);
-} else {
-  console.warn("⚠️ techPulseAgent.a2a is not defined. Check agent initialization.");
-}
+console.log("🌐 A2A URL:", techPulseAgent.a2a.url);
