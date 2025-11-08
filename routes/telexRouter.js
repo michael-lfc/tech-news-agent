@@ -123,13 +123,16 @@ router.post("/register", async (req, res) => {
   }
 });
 
-// Telex A2A message endpoint
-router.post("/a2a/:channelId/message", async (req, res) => {
+// Telex A2A message endpoint - handles both GET and POST requests
+router.all("/a2a/:channelId/message", async (req, res) => {
   try {
     const { channelId } = req.params;
-    const { text, user_id, id } = req.body;
+    const isGet = req.method === 'GET';
+    
+    // Get data from either body (POST) or query (GET)
+    const { text, user_id, id } = isGet ? req.query : req.body;
 
-    console.log(`📩 Telex message from channel ${channelId}:`, text);
+    console.log(`📩 ${req.method} Telex message from channel ${channelId}:`, text);
 
     if (text && text.toLowerCase().includes('news')) {
       const limit = text.toLowerCase().includes('latest') ? 5 : 3;
@@ -166,19 +169,19 @@ router.post("/a2a/:channelId/message", async (req, res) => {
     });
 
   } catch (error) {
-    console.error("💥 Telex message processing error:", error);
+    console.error(`💥 ${req.method} Telex message processing error:`, error);
     res.status(500).json({
       jsonrpc: "2.0",
       error: { 
         code: -32603, 
         message: "Internal server error while processing news request" 
       },
-      id: req.body?.id || null
+      id: req.method === 'GET' ? req.query?.id : req.body?.id || null
     });
   }
 });
 
-// Test endpoint to verify webhook configuration -
+// Test endpoint to verify webhook configuration
 router.get("/test/:channelId", async (req, res) => {
   const { channelId } = req.params;
   const baseUrl = process.env.BASE_URL || `http://localhost:${process.env.PORT || 3000}`;
@@ -187,6 +190,7 @@ router.get("/test/:channelId", async (req, res) => {
     message: "✅ Telex webhook endpoint is active and ready",
     channel_id: channelId,
     webhook_url: `${baseUrl}/telex/a2a/${channelId}/message`,
+    supported_methods: ["GET", "POST"],
     status: "operational",
     timestamp: new Date().toISOString(),
     test_instructions: `Send a POST request to the webhook URL with:`,
@@ -199,7 +203,8 @@ router.get("/test/:channelId", async (req, res) => {
         user_id: "test_user_123"
       },
       id: "test_001"
-    }
+    },
+    get_test: `Or test GET: ${baseUrl}/telex/a2a/${channelId}/message?text=get+tech+news&user_id=test_user_123`
   };
 
   res.status(200).json(testInfo);
@@ -216,7 +221,8 @@ router.get("/test", async (req, res) => {
       with_channel: `${baseUrl}/telex/test/your_channel_id`,
       registration: `${baseUrl}/telex/register`,
       health: `${baseUrl}/telex/health`
-    }
+    },
+    note: "Webhook endpoint now supports both GET and POST methods"
   };
 
   res.status(200).json(testInfo);
@@ -230,7 +236,7 @@ router.get("/health", (req, res) => {
     timestamp: new Date().toISOString(),
     endpoints: {
       registration: "/telex/register",
-      message_webhook: "/telex/a2a/{channelId}/message",
+      message_webhook: "/telex/a2a/{channelId}/message (GET & POST)",
       test: "/telex/test/{channelId}",
       health: "/telex/health"
     }
