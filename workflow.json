@@ -10,7 +10,10 @@
       "name": "Message Trigger",
       "config": {
         "event": "message",
-        "platform": "telex"
+        "platform": "telex",
+        "conditions": [
+          { "field": "text", "operator": "contains", "value": "news" }
+        ]
       },
       "position": [100, 100],
       "type": "trigger",
@@ -29,14 +32,9 @@
     }
   ],
   "edges": [
-    {
-      "from": "trigger",
-      "to": "agent"
-    }
+    { "from": "trigger", "to": "agent" }
   ],
   "pinData": {},
-  "settings": {
-    "executionOrder": "v1"
-  },
+  "settings": { "executionOrder": "v1" },
   "short_description": "Fetches and shares the latest technology news headlines"
 }
