@@ -1,6 +1,6 @@
 {
   "id": "tech-news-workflow",
-  "name": "Tech News Agent Workflow",
+  "name": "Tech News Workflow",
   "description": "Fetches technology news from NewsAPI",
   "nodes": [
     {
