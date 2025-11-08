@@ -6,13 +6,32 @@
   "name": "tech_pulse_agent",
   "nodes": [
     {
-      "id": "techPulseNode",
-      "name": "Tech Pulse Agent",
-      "parameters": {},
-      "position": [800, -100],
-      "type": "a2a/mastra-a2a-node",
-      "typeVersion": 1,
-      "url": "https://powerful-atoll-01260-84ad49c653d5.herokuapp.com/telex/a2a/agent/techPulse"
+      "id": "trigger",
+      "name": "Message Trigger",
+      "config": {
+        "event": "message",
+        "platform": "telex", 
+        "webhookUrl": "https://powerful-atoll-01260-84ad49c653d5.herokuapp.com/telex/a2a/techpulse/message"
+      },
+      "position": [100, 100],
+      "type": "trigger",
+      "typeVersion": 1
+    },
+    {
+      "id": "agent",
+      "name": "Tech News Agent",
+      "config": {
+        "agentId": "techPulse"
+      },
+      "position": [300, 100],
+      "type": "agent",
+      "typeVersion": 1
+    }
+  ],
+  "edges": [
+    {
+      "from": "trigger",
+      "to": "agent"
     }
   ],
   "pinData": {},
