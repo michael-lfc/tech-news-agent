@@ -2,7 +2,7 @@
   "active": true,
   "category": "productivity",
   "description": "AI agent that fetches the latest technology news from NewsAPI",
-  "id": "tech-news-workflow-v1",
+  "id": "tech-news-workflow-v2",
   "name": "tech_news_agent_workflow",
   "short_description": "Fetches and shares the latest technology news headlines",
   "nodes": [
