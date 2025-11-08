@@ -31,7 +31,7 @@
       "type": "agent",
       "label": "TechPulse News Agent",
       "config": {
-        "agentId": "019a5969-2cde-74b0-b10b-6bf7656e9469",
+        "agentId": "techPulse",
         "description": "Core AI agent that processes news requests and fetches real-time technology headlines"
       },
       "position": [400, 100]
@@ -48,7 +48,7 @@
   "metadata": {
     "version": "1.0",
     "created": "2025-11-07",
-    "author": "Michael Agwogie",
+    "author": "Michael",
     "tags": ["news", "technology", "ai", "updates", "headlines"],
     "integrations": ["NewsAPI", "Telex.im", "Mastra AI"]
   }
