@@ -3,38 +3,47 @@
   "category": "productivity",
   "description": "AI agent that fetches the latest technology news from NewsAPI",
   "id": "tech-news-workflow-v1",
-  "name": "tech_pulse_agent",
+  "name": "tech_news_agent_workflow",
+  "short_description": "Fetches and shares the latest technology news headlines",
   "nodes": [
     {
       "id": "trigger",
       "name": "Message Trigger",
+      "type": "trigger",
+      "typeVersion": 1,
+      "position": [100, 100],
       "config": {
         "event": "message",
         "platform": "telex",
         "conditions": [
-          { "field": "text", "operator": "contains", "value": "news" }
+          {
+            "field": "text",
+            "operator": "contains",
+            "value": "news"
+          }
         ]
-      },
-      "position": [100, 100],
-      "type": "trigger",
-      "typeVersion": 1
+      }
     },
     {
       "id": "agent",
       "name": "Tech News Agent",
+      "type": "agent",
+      "typeVersion": 1,
+      "position": [300, 100],
       "config": {
         "agentId": "techPulse",
         "url": "https://powerful-atoll-01260-84ad49c653d5.herokuapp.com/telex/a2a/techpulse/message"
-      },
-      "position": [300, 100],
-      "type": "agent",
-      "typeVersion": 1
+      }
     }
   ],
   "edges": [
-    { "from": "trigger", "to": "agent" }
+    {
+      "from": "trigger",
+      "to": "agent"
+    }
   ],
   "pinData": {},
-  "settings": { "executionOrder": "v1" },
-  "short_description": "Fetches and shares the latest technology news headlines"
+  "settings": {
+    "executionOrder": "v1"
+  }
 }
