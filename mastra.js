@@ -6,36 +6,47 @@ dotenv.config();
 
 // ✅ TechPulse Agent
 export const techPulseAgent = new Agent({
-  id: "techPulse", // Use 'id' instead of 'name' for agent identification
+  id: "techPulse",
   name: "Tech Pulse Agent", 
-  instructions: "You are a helpful tech news assistant that fetches the latest technology headlines.",
+  instructions: `You are a helpful tech news assistant that fetches the latest technology headlines.
+  
+When users ask for news, tech news, or latest news, use your getTechNews tool to fetch current headlines from NewsAPI.
+Format the response in a clear, engaging way with emojis and proper formatting.`,
+
   model: {
     provider: "openai",
     name: "gpt-4",
   },
 
-  // A2A Configuration
-  a2a: {
-    webhookUrl: "https://powerful-atoll-01260-84ad49c653d5.herokuapp.com/telex/a2a/techpulse/message"
-  },
-
+  // Remove A2A config - we'll handle it in Express routes
   tools: {
     getTechNews: {
       description: "Fetch latest technology news from NewsAPI",
       parameters: {
         type: "object",
         properties: {
-          limit: { type: "number", default: 5 },
+          limit: { 
+            type: "number", 
+            default: 5,
+            description: "Number of news articles to fetch (1-10)"
+          },
         },
       },
       execute: async ({ limit = 5 }) => {
         try {
           const apiKey = process.env.NEWS_API_KEY;
-          if (!apiKey) throw new Error("NewsAPI key missing");
+          if (!apiKey) {
+            console.error("❌ NewsAPI key missing");
+            return {
+              success: false,
+              message: "📰 News service is currently unavailable. Please try again later."
+            };
+          }
 
           const url = `https://newsapi.org/v2/top-headlines?category=technology&pageSize=${limit}&apiKey=${apiKey}`;
 
-          const response = await axios.get(url, { timeout: 8000 });
+          console.log(`📡 Fetching ${limit} tech news articles...`);
+          const response = await axios.get(url, { timeout: 10000 });
 
           if (response.data.status !== "ok") {
             throw new Error(response.data.message || "NewsAPI error");
@@ -49,27 +60,40 @@ export const techPulseAgent = new Agent({
               title: article.title,
               source: article.source?.name || "Unknown",
               url: article.url,
+              description: article.description || "No description available"
             }));
 
-          return { success: true, count: headlines.length, headlines };
+          console.log(`✅ Fetched ${headlines.length} news articles`);
+          
+          return { 
+            success: true, 
+            count: headlines.length, 
+            headlines,
+            message: headlines.length > 0 
+              ? `Here are the latest tech news headlines:\n\n${headlines.map(article => `📰 ${article.title}\n🔗 ${article.url}`).join('\n\n')}`
+              : "No recent tech news articles found."
+          };
+
         } catch (error) {
-          console.error("NewsAPI Error:", error.message);
+          console.error("❌ NewsAPI Error:", error.message);
 
           if (error.code === "ECONNABORTED" || error.message.includes("timeout")) {
             return {
-              success: true,
-              count: 0,
-              headlines: [],
-              message:
-                "📰 Here are recent tech trends:\n\n• AI advancements continue to shape industries\n• Cybersecurity remains a top priority\n• Cloud computing adoption continues to grow\n• Electric vehicle market expansion accelerates\n• 5G rollout enables new IoT applications\n\nNewsAPI is currently slow. Try again soon!",
+              success: false,
+              message: "⏰ News service is taking longer than expected. Please try again in a moment!"
+            };
+          }
+
+          if (error.response?.status === 401) {
+            return {
+              success: false,
+              message: "🔑 News service configuration issue. Please contact support."
             };
           }
 
           return {
-            success: true,
-            count: 0,
-            headlines: [],
-            message: "📰 Tech news is temporarily unavailable. Please try again later!",
+            success: false,
+            message: "📰 Tech news is temporarily unavailable. Please try again later!"
           };
         }
       },
@@ -81,5 +105,10 @@ export const techPulseAgent = new Agent({
 export const mastra = new Mastra({
   agents: [techPulseAgent],
 });
+
+// Helper function to get agent by ID
+export const getAgent = (agentId) => {
+  return mastra.getAgent(agentId);
+};
 
 console.log("✅ Mastra initialized with TechPulse Agent");
