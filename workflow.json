@@ -2,8 +2,8 @@
   "id": "tech-news-workflow",
   "name": "Tech News Agent Workflow",
   "category": "technology",
-  "short_description": "Fetches and delivers latest technology news headlines",
-  "long_description": "This workflow handles incoming Telex messages, processes requests for technology news, fetches latest headlines from NewsAPI, and returns formatted responses.",
+  "short_description": "Fetches and delivers the latest technology news headlines.",
+  "long_description": "This workflow listens for messages containing the word 'news' on Telex, then triggers the TechPulse Agent to fetch and return the latest technology news from an external API.",
   "nodes": [
     {
       "id": "trigger",
@@ -26,7 +26,10 @@
           "name": "Tech News Agent",
           "label": "Tech News Agent",
           "typeVersion": 1,
-          "config": { "agentId": "techPulse" },
+          "config": {
+            "agentId": "techPulse",
+            "url": "https://powerful-atoll-01260-84ad49c653d5.herokuapp.com/telex/a2a/techpulse/message"
+          },
           "position": [300, 100]
         }
       ]
