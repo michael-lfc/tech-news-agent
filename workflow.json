@@ -1,42 +1,32 @@
 {
   "id": "tech-news-workflow",
-  "name": "Tech News Agent Workflow",
-  "description": "A comprehensive workflow that automatically fetches and delivers the latest technology news headlines to users on the Telex platform.",
-  "category": "technology",
-  "short_description": "AI-powered tech news assistant that fetches and delivers latest technology headlines from NewsAPI.",
-  "long_description": "This workflow enables the TechPulse AI agent to serve as a dedicated technology news assistant within Telex conversations.",
+  "name": "Tech News Workflow",
+  "description": "Fetches technology news from NewsAPI",
   "nodes": [
     {
-      "id": "message-trigger",
-      "name": "Message Detection Trigger",
+      "id": "trigger",
+      "name": "Message Trigger",
       "type": "trigger",
       "config": {
         "event": "message",
-        "platform": "telex",
-        "conditions": [
-          {
-            "field": "text",
-            "value": "news",
-            "operator": "contains"
-          }
-        ]
+        "platform": "telex"
       },
       "position": [100, 100]
     },
     {
-      "id": "tech-news-processor",
-      "name": "Tech News Processing Agent",
+      "id": "agent",
+      "name": "Tech News Agent", 
       "type": "agent",
       "config": {
         "agentId": "techPulse"
       },
-      "position": [400, 100]
+      "position": [300, 100]
     }
   ],
   "edges": [
     {
-      "from": "message-trigger",
-      "to": "tech-news-processor"
+      "from": "trigger",
+      "to": "agent"
     }
   ]
 }
