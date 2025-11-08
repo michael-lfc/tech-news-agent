@@ -1,4 +1,3 @@
-// mastra.js
 import { Mastra, Agent } from "@mastra/core";
 import axios from "axios";
 import dotenv from "dotenv";
@@ -25,7 +24,7 @@ Format the response in a clear, engaging way with emojis and proper formatting.`
       parameters: {
         type: "object",
         properties: {
-          limit: { type: "number", default: 5 },
+          limit: { type: "number", default: 5 }
         },
       },
       execute: async ({ limit = 5 }) => {
@@ -38,25 +37,27 @@ Format the response in a clear, engaging way with emojis and proper formatting.`
 
           if (response.data.status !== "ok") throw new Error("NewsAPI error");
 
+          // ✅ Convert headlines to a single string
           const headlines = response.data.articles
             .filter(a => a.title)
             .slice(0, limit)
-            .map((a, i) => ({ number: i + 1, title: a.title, url: a.url }));
+            .map((a, i) => `📰 ${a.title}\n🔗 ${a.url}`)
+            .join("\n\n");
 
-          return { success: true, headlines };
+          return { success: true, message: headlines }; // <-- Important
         } catch (err) {
           console.error("❌ NewsAPI Error:", err.message);
-          return { success: false, headlines: [] };
+          return { success: false, message: "📰 Tech news unavailable, try again later!" };
         }
       },
     },
   },
 
-  // ✅ Enable A2A with dynamic channelId
+  // ✅ Enable A2A
   a2a: {
     enabled: true,
-    url: `${process.env.BASE_URL || "http://localhost:3000"}/telex/a2a/{channelId}/message`,
-  },
+    url: "https://powerful-atoll-01260-84ad49c653d5.herokuapp.com/telex/a2a/techpulse/message"
+  }
 });
 
 // Initialize Mastra with agent
