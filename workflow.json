@@ -1,32 +1,35 @@
 {
   "id": "tech-news-workflow",
-  "name": "Tech News Workflow",
-  "description": "Fetches technology news from NewsAPI",
+  "name": "Tech News Agent Workflow",
+  "category": "technology",
+  "short_description": "Fetches and delivers latest technology news headlines",
+  "long_description": "This workflow handles incoming Telex messages, processes requests for technology news, fetches latest headlines from NewsAPI, and returns formatted responses.",
   "nodes": [
     {
       "id": "trigger",
-      "name": "Message Trigger",
       "type": "trigger",
+      "name": "Message Trigger",
+      "label": "Message Trigger",
+      "typeVersion": 1,
       "config": {
         "event": "message",
-        "platform": "telex"
+        "platform": "telex",
+        "conditions": [
+          { "field": "text", "value": "news", "operator": "contains" }
+        ]
       },
-      "position": [100, 100]
-    },
-    {
-      "id": "agent",
-      "name": "Tech News Agent", 
-      "type": "agent",
-      "config": {
-        "agentId": "techPulse"
-      },
-      "position": [300, 100]
-    }
-  ],
-  "edges": [
-    {
-      "from": "trigger",
-      "to": "agent"
+      "position": [100, 100],
+      "children": [
+        {
+          "id": "agent",
+          "type": "agent",
+          "name": "Tech News Agent",
+          "label": "Tech News Agent",
+          "typeVersion": 1,
+          "config": { "agentId": "techPulse" },
+          "position": [300, 100]
+        }
+      ]
     }
   ]
 }
