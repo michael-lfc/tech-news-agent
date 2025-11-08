@@ -1,7 +1,7 @@
 // controllers/newsController.js
 import axios from "axios";
 
-// Pure function to fetch news
+// Pure function to fetch news from NewsAPI
 export const fetchTechNews = async (limit = 5) => {
   const response = await axios.get(
     `https://newsapi.org/v2/top-headlines?category=technology&pageSize=${limit}&apiKey=${process.env.NEWS_API_KEY}`
@@ -14,7 +14,7 @@ export const fetchTechNews = async (limit = 5) => {
   }));
 };
 
-// Optional Express route handler for GET/POST requests
+// Optional Express route handler
 export const getTechNews = async (req, res) => {
   try {
     const limit = req.body?.params?.limit || req.query.limit || 5;
@@ -33,7 +33,7 @@ export const getTechNews = async (req, res) => {
     res.status(200).json({ articles });
   } catch (error) {
     console.error("💥 Error fetching tech news:", error.message);
-    const id = req.body?.id || req.query.id || null;
+    const id = req.body?.id || req.query?.id || null;
 
     return res.status(500).json({
       jsonrpc: "2.0",

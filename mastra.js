@@ -1,3 +1,4 @@
+// mastra.js
 import { Mastra, Agent } from "@mastra/core";
 import axios from "axios";
 import dotenv from "dotenv";
@@ -11,7 +12,7 @@ export const techPulseAgent = new Agent({
   instructions: `You are a helpful tech news assistant that fetches the latest technology headlines.
 When users ask for news, tech news, or latest news, use your getTechNews tool to fetch current headlines from NewsAPI.
 Format the response in a clear, engaging way with emojis and proper formatting.`,
-  
+
   model: {
     provider: "openai",
     name: "gpt-4",
@@ -24,7 +25,7 @@ Format the response in a clear, engaging way with emojis and proper formatting.`
       parameters: {
         type: "object",
         properties: {
-          limit: { type: "number", default: 5 }
+          limit: { type: "number", default: 5 },
         },
       },
       execute: async ({ limit = 5 }) => {
@@ -45,17 +46,17 @@ Format the response in a clear, engaging way with emojis and proper formatting.`
           return { success: true, headlines };
         } catch (err) {
           console.error("❌ NewsAPI Error:", err.message);
-          return { success: false, message: "📰 Tech news unavailable, try again later!" };
+          return { success: false, headlines: [] };
         }
       },
     },
   },
 
-  // ✅ Enable A2A
+  // ✅ Enable A2A with dynamic channelId
   a2a: {
-    enabled: true, 
-    url: "https://powerful-atoll-01260-84ad49c653d5.herokuapp.com/telex/a2a/techpulse/message"
-  }
+    enabled: true,
+    url: `${process.env.BASE_URL || "http://localhost:3000"}/telex/a2a/{channelId}/message`,
+  },
 });
 
 // Initialize Mastra with agent
