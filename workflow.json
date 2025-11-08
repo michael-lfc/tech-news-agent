@@ -6,14 +6,14 @@
       "to": "agent"
     }
   ],
-  "id": "tech-news-workflow",
+  "id": "tech-news-workflow", 
   "name": "Tech News Workflow",
   "nodes": [
     {
       "config": {
         "event": "message",
         "platform": "telex",
-        "webhookUrl": "https://powerful-atoll-01260-84ad49c653d5.herokuapp.com/telex/a2a/techpulse/message"
+        "webhookUrl": "https://powerful-atoll-01260-84ad49c653d5.herokuapp.com/telex/a2a/019a5969-61ae-7943-adca-21e9b3a3f8d7/message"
       },
       "id": "trigger",
       "name": "Message Trigger",
@@ -23,13 +23,12 @@
     },
     {
       "config": {
-        "agentId": "techPulse",
-        "webhookUrl": "https://powerful-atoll-01260-84ad49c653d5.herokuapp.com/telex/a2a/techpulse/message"
+        "agentId": "techPulse"
       },
       "id": "agent",
       "name": "Tech News Agent",
       "position": [300, 100],
-      "type": "agent",
+      "type": "agent", 
       "typeVersion": 1
     }
   ]
