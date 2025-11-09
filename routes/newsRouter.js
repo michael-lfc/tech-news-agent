@@ -19,4 +19,5 @@ router.get("/", async (req, res) => {
 // JSON-RPC endpoint for POST/GET requests
 router.all("/jsonrpc", getTechNews);
 
+// 🔥 CRITICAL: This must be the LAST line
 export default router;

@@ -11,7 +11,7 @@
       "name": "Message Trigger",
       "type": "trigger",
       "typeVersion": 1,
-      "position": [100, 100],
+      "position": [816, 112],
       "config": {
         "event": "message",
         "platform": "telex",
@@ -19,7 +19,7 @@
           {
             "field": "text",
             "operator": "matches",
-            "value": "(?i)(news|tech news)"
+            "value": "(?i)(news|tech news|headlines|latest news)"
           }
         ]
       }
@@ -29,16 +29,21 @@
       "name": "Tech News Agent",
       "type": "agent",
       "typeVersion": 1,
-      "position": [300, 100],
+      "position": [1050, 112],
       "config": {
-        "agentId": "techPulse",
-        "url": "https://powerful-atoll-01260-84ad49c653d5.herokuapp.com/telex/a2a/techpulse/message"
+        "agentId": "techpulse",
+        "url": "https://powerful-atoll-01260-84ad49c653d5.herokuapp.com/telex/a2a/agent/techpulse"
       }
     }
   ],
   "edges": [
-    { "from": "trigger", "to": "agent" }
+    {
+      "from": "trigger",
+      "to": "agent"
+    }
   ],
   "pinData": {},
-  "settings": { "executionOrder": "v1" }
+  "settings": {
+    "executionOrder": "v1"
+  }
 }

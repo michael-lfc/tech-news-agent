@@ -1,4 +1,4 @@
-// routes/telexRouter.js
+// routes/telexRouter.js - COMPLETE WORKING VERSION
 import express from "express";
 import { mastra } from "../mastra.js";
 import { fetchTechNews } from "../controllers/newsController.js";
@@ -56,42 +56,68 @@ router.post("/a2a/agent/:agentId", async (req, res) => {
     const { agentId } = req.params;
     const a2aRequest = req.body;
 
-    console.log(`🤖 A2A Request for agent: ${agentId}`, a2aRequest);
+    console.log(`🤖 A2A Request for agent: ${agentId}`);
 
-    const agent = mastra.getAgent(agentId);
+    // FIXED: Direct agent access from mastra
+    const agents = mastra.getAgents();
+    console.log('🔍 Available agent IDs:', Object.keys(agents));
+    
+    // Get agent directly from the agents object
+    const agent = agents[agentId];
+    
     if (!agent) {
+      console.log('❌ Agent not found in:', Object.keys(agents));
       return res.status(404).json({
         jsonrpc: "2.0",
-        error: { code: -32601, message: "Agent not found" },
+        error: { 
+          code: -32601, 
+          message: `Agent '${agentId}' not found. Available: ${Object.keys(agents).join(', ')}` 
+        },
         id: a2aRequest.id || null
       });
     }
 
-    // Safely extract text from JSON-RPC 2.0 format
+    console.log('✅ Agent found:', agent.id);
+    
+    // Extract text from A2A message format
     const text = a2aRequest?.params?.message?.parts?.find(p => p.kind === "text")?.text;
+    
+    console.log(`📝 Extracted text: "${text}"`);
 
-    if (text && text.toLowerCase().includes("news")) {
+    if (text && /news|tech|headlines/i.test(text)) {
+      console.log("🔄 Calling getTechNews tool...");
+      
       const newsResult = await agent.tools.getTechNews.execute({ limit: 5 });
-      const responseText = newsResult.message || "No news available.";
-
+      
       return res.json({
         jsonrpc: "2.0",
-        result: { messages: [{ kind: "text", text: responseText }] },
+        result: { 
+          messages: [{ 
+            kind: "text", 
+            text: newsResult.message || "No tech news available at the moment." 
+          }] 
+        },
         id: a2aRequest.id || null
       });
     }
 
-    // Default A2A response
+    // Default response
     res.json({
       jsonrpc: "2.0",
-      result: { messages: [{ kind: "text", text: "Ask me for 'news' to get the latest tech headlines! 📰" }] },
+      result: { 
+        messages: [{ 
+          kind: "text", 
+          text: "I can fetch the latest tech news! Try saying 'news' or 'tech news'. 📰" 
+        }] 
+      },
       id: a2aRequest.id || null
     });
+
   } catch (err) {
-    console.error("💥 A2A error:", err);
+    console.error("💥 A2A Protocol Error:", err);
     res.status(500).json({
       jsonrpc: "2.0",
-      error: { code: -32603, message: err.message },
+      error: { code: -32603, message: "Internal server error" },
       id: req.body?.id || null
     });
   }
@@ -103,9 +129,10 @@ router.get("/register", (req, res) => {
   res.json({
     status: "ready",
     webhook_endpoint: `${baseUrl}/telex/a2a/{channelId}/message`,
-    a2a_endpoint: `${baseUrl}/telex/a2a/agent/techPulse`,
+    a2a_endpoint: `${baseUrl}/telex/a2a/agent/techpulse`,
     instructions: "Use the webhook endpoint for direct messages, or the A2A endpoint for JSON-RPC 2.0 messages"
   });
 });
 
+// 🔥 CRITICAL: This must be the LAST line in the file
 export default router;
