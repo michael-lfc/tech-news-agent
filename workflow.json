@@ -2,8 +2,8 @@
   "active": true,
   "category": "productivity",
   "description": "AI agent that fetches the latest technology news from NewsAPI",
-  "id": "tech-news-workflow-final",
-  "name": "TechPulse News Agent",
+  "id": "tech-news-workflow-final-v2",
+  "name": "TechPulse News Agent V2",
   "short_description": "Fetches and shares the latest technology news headlines",
   "nodes": [
     {
