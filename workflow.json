@@ -1,6 +1,6 @@
 {
   "active": true,
-  "category": "productivity", 
+  "category": "productivity",
   "description": "AI agent that fetches the latest technology news from NewsAPI",
   "id": "tech-news-workflow-final",
   "name": "TechPulse News Agent",
@@ -8,13 +8,13 @@
   "nodes": [
     {
       "id": "trigger",
-      "name": "Message Trigger", 
+      "name": "Message Trigger",
       "type": "trigger",
       "typeVersion": 1,
       "position": [816, 112],
       "config": {
         "event": "message",
-        "platform": "telex", 
+        "platform": "telex",
         "conditions": [
           {
             "field": "text",
@@ -25,7 +25,7 @@
       }
     },
     {
-      "id": "agent", 
+      "id": "agent",
       "name": "Tech News Agent",
       "type": "agent",
       "typeVersion": 1,
@@ -42,6 +42,7 @@
       "to": "agent"
     }
   ],
+  "pinData": {},
   "settings": {
     "executionOrder": "v1"
   }
